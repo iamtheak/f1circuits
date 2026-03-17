@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { tracks, TrackData } from './data/tracks';
+import tracksGlbUrl from './assets/tracks.glb?url';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -208,11 +209,11 @@ const TopGrid = ({ track }: { track: TrackData }) => {
   );
 };
 
-useGLTF.preload('/tracks.glb');
+useGLTF.preload(tracksGlbUrl);
 
 const Track3D = ({ shape, position, glbNodeName }: { shape: number[][], position: [number, number, number], glbNodeName?: string }) => {
   const trackRef = useRef<THREE.Group>(null);
-  const { scene } = useGLTF('/tracks.glb');
+  const { scene } = useGLTF(tracksGlbUrl);
 
   const { core, glow1, glow2, isGLB } = useMemo(() => {
     if (glbNodeName) {
