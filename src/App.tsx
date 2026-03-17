@@ -1,39 +1,38 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import * as THREE from 'three';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
-import { tracks, TrackData } from './data/tracks';
-import tracksGlbUrl from './assets/tracks.glb?url';
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import * as THREE from "three";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+import { tracks, TrackData } from "./data/tracks";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const getCountryCode = (country: string) => {
   const map: Record<string, string> = {
-    "Bahrain": "bh",
+    Bahrain: "bh",
     "Saudi Arabia": "sa",
-    "Australia": "au",
-    "Japan": "jp",
-    "China": "cn",
-    "USA": "us",
-    "Italy": "it",
-    "Monaco": "mc",
-    "Canada": "ca",
-    "Spain": "es",
-    "Austria": "at",
+    Australia: "au",
+    Japan: "jp",
+    China: "cn",
+    USA: "us",
+    Italy: "it",
+    Monaco: "mc",
+    Canada: "ca",
+    Spain: "es",
+    Austria: "at",
     "Great Britain": "gb",
-    "Hungary": "hu",
-    "Belgium": "be",
-    "Netherlands": "nl",
-    "Azerbaijan": "az",
-    "Singapore": "sg",
-    "Mexico": "mx",
-    "Brazil": "br",
-    "Qatar": "qa",
-    "UAE": "ae"
+    Hungary: "hu",
+    Belgium: "be",
+    Netherlands: "nl",
+    Azerbaijan: "az",
+    Singapore: "sg",
+    Mexico: "mx",
+    Brazil: "br",
+    Qatar: "qa",
+    UAE: "ae",
   };
   return map[country] || "un";
 };
@@ -43,21 +42,21 @@ const Sidebar = ({ track }: { track: TrackData }) => {
     <div className="w-full md:w-[100px] h-[64px] md:h-auto shrink-0 bg-[#181A1B] border-b-2 md:border-b-0 md:border-r-2 border-[#ff2800] flex flex-row md:flex-col items-center justify-between px-8 md:px-0 py-0 md:py-8 z-20">
       <div className="flex-1 flex items-center justify-start md:justify-center overflow-hidden">
         <AnimatePresence mode="wait">
-          <motion.h1 
+          <motion.h1
             key={track.id}
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -50, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="text-[#ff2800] font-montserrat font-bold text-[24px] md:text-[48px] uppercase tracking-[0.2em] md:rotate-180 md:[writing-mode:vertical-rl] whitespace-nowrap" 
+            className="text-[#ff2800] font-montserrat font-bold text-[24px] md:text-[48px] uppercase tracking-[0.2em] md:rotate-180 md:[writing-mode:vertical-rl] whitespace-nowrap"
           >
             {track.name}
           </motion.h1>
         </AnimatePresence>
       </div>
       <div className="w-8 h-5 flex items-center justify-center rounded-sm shrink-0 overflow-hidden bg-white/10">
-        <img 
-          src={`https://flagcdn.com/w40/${getCountryCode(track.country)}.png`} 
+        <img
+          src={`https://flagcdn.com/w40/${getCountryCode(track.country)}.png`}
           alt={track.country}
           className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
@@ -69,17 +68,23 @@ const Sidebar = ({ track }: { track: TrackData }) => {
 
 const DateBlock = ({ track }: { track: TrackData }) => (
   <div className="flex flex-col">
-    <span className="text-white font-montserrat font-medium text-[clamp(10px,2vw,14px)] uppercase tracking-[0.1em] mb-1 md:mb-2">When</span>
+    <span className="text-white font-montserrat font-medium text-[clamp(10px,2vw,14px)] uppercase tracking-[0.1em] mb-1 md:mb-2">
+      When
+    </span>
     <AnimatePresence mode="wait">
-      <motion.div 
+      <motion.div
         key={track.id}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 20 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="text-[#ff2800] font-montserrat font-bold text-[clamp(18px,4.5vw,28px)] lg:text-[32px] leading-none">{track.date.start}-{track.date.end}</div>
-        <div className="text-white font-montserrat font-bold text-[clamp(18px,4.5vw,28px)] lg:text-[32px] leading-none uppercase mt-1">{track.date.month}</div>
+        <div className="text-[#ff2800] font-montserrat font-bold text-[clamp(18px,4.5vw,28px)] lg:text-[32px] leading-none">
+          {track.date.start}-{track.date.end}
+        </div>
+        <div className="text-white font-montserrat font-bold text-[clamp(18px,4.5vw,28px)] lg:text-[32px] leading-none uppercase mt-1">
+          {track.date.month}
+        </div>
       </motion.div>
     </AnimatePresence>
   </div>
@@ -88,9 +93,11 @@ const DateBlock = ({ track }: { track: TrackData }) => (
 const StatsBlock = ({ track }: { track: TrackData }) => (
   <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-y-4 md:gap-y-12 gap-x-4 md:gap-x-8 flex-1">
     <div className="flex flex-col">
-      <span className="text-white font-montserrat font-medium text-[clamp(10px,2vw,14px)] uppercase tracking-[0.1em] mb-1 md:mb-2">Length</span>
+      <span className="text-white font-montserrat font-medium text-[clamp(10px,2vw,14px)] uppercase tracking-[0.1em] mb-1 md:mb-2">
+        Length
+      </span>
       <AnimatePresence mode="wait">
-        <motion.div 
+        <motion.div
           key={track.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -98,14 +105,19 @@ const StatsBlock = ({ track }: { track: TrackData }) => (
           transition={{ duration: 0.3 }}
           className="text-[#ff2800] font-montserrat font-bold text-[clamp(18px,4.5vw,28px)] lg:text-[32px] leading-none flex flex-wrap items-baseline gap-1 md:gap-2"
         >
-          {track.length} <span className="text-white text-[clamp(12px,2.5vw,16px)] lg:text-[18px]">KM</span>
+          {track.length}{" "}
+          <span className="text-white text-[clamp(12px,2.5vw,16px)] lg:text-[18px]">
+            KM
+          </span>
         </motion.div>
       </AnimatePresence>
     </div>
     <div className="flex flex-col">
-      <span className="text-white font-montserrat font-medium text-[clamp(10px,2vw,14px)] uppercase tracking-[0.1em] mb-1 md:mb-2">Distance</span>
+      <span className="text-white font-montserrat font-medium text-[clamp(10px,2vw,14px)] uppercase tracking-[0.1em] mb-1 md:mb-2">
+        Distance
+      </span>
       <AnimatePresence mode="wait">
-        <motion.div 
+        <motion.div
           key={track.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,14 +125,19 @@ const StatsBlock = ({ track }: { track: TrackData }) => (
           transition={{ duration: 0.3 }}
           className="text-[#ff2800] font-montserrat font-bold text-[clamp(18px,4.5vw,28px)] lg:text-[32px] leading-none flex flex-wrap items-baseline gap-1 md:gap-2"
         >
-          {track.distance} <span className="text-white text-[clamp(12px,2.5vw,16px)] lg:text-[18px]">KM</span>
+          {track.distance}{" "}
+          <span className="text-white text-[clamp(12px,2.5vw,16px)] lg:text-[18px]">
+            KM
+          </span>
         </motion.div>
       </AnimatePresence>
     </div>
     <div className="flex flex-col">
-      <span className="text-white font-montserrat font-medium text-[clamp(10px,2vw,14px)] uppercase tracking-[0.1em] mb-1 md:mb-2">Laps</span>
+      <span className="text-white font-montserrat font-medium text-[clamp(10px,2vw,14px)] uppercase tracking-[0.1em] mb-1 md:mb-2">
+        Laps
+      </span>
       <AnimatePresence mode="wait">
-        <motion.div 
+        <motion.div
           key={track.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -135,14 +152,36 @@ const StatsBlock = ({ track }: { track: TrackData }) => (
   </div>
 );
 
-const ScheduleRow = ({ name, date, time, isRace = false }: { name: string, date: string, time: string, isRace?: boolean }) => {
+const ScheduleRow = ({
+  name,
+  date,
+  time,
+  isRace = false,
+}: {
+  name: string;
+  date: string;
+  time: string;
+  isRace?: boolean;
+}) => {
   const colorClass = isRace ? "text-[#ff2800]" : "text-white";
   return (
     <div className="flex justify-between items-center py-1.5">
-      <div className={`${colorClass} font-montserrat font-medium text-[12px] md:text-[14px] uppercase w-[100px] md:w-[120px]`}>{name}</div>
+      <div
+        className={`${colorClass} font-montserrat font-medium text-[12px] md:text-[14px] uppercase w-[100px] md:w-[120px]`}
+      >
+        {name}
+      </div>
       <div className="flex gap-3 md:gap-6 flex-1 justify-end">
-        <div className={`${colorClass} font-sans text-[12px] md:text-[14px] opacity-80`}>{date}</div>
-        <div className={`${colorClass} font-sans text-[12px] md:text-[14px] w-[35px] md:w-[45px] text-right font-medium`}>{time}</div>
+        <div
+          className={`${colorClass} font-sans text-[12px] md:text-[14px] opacity-80`}
+        >
+          {date}
+        </div>
+        <div
+          className={`${colorClass} font-sans text-[12px] md:text-[14px] w-[35px] md:w-[45px] text-right font-medium`}
+        >
+          {time}
+        </div>
       </div>
     </div>
   );
@@ -150,9 +189,11 @@ const ScheduleRow = ({ name, date, time, isRace = false }: { name: string, date:
 
 const ScheduleBlock = ({ track }: { track: TrackData }) => (
   <div className="flex flex-col">
-    <span className="text-white/60 font-montserrat font-medium text-[10px] md:text-[12px] uppercase tracking-[0.1em] mb-2">Schedule</span>
+    <span className="text-white/60 font-montserrat font-medium text-[10px] md:text-[12px] uppercase tracking-[0.1em] mb-2">
+      Schedule
+    </span>
     <AnimatePresence mode="wait">
-      <motion.div 
+      <motion.div
         key={track.id}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -161,20 +202,30 @@ const ScheduleBlock = ({ track }: { track: TrackData }) => (
         className="flex flex-col max-w-sm"
       >
         {track.schedule.map((item, idx) => (
-          <ScheduleRow key={idx} name={item.name} date={item.date} time={item.time} isRace={item.isRace} />
+          <ScheduleRow
+            key={idx}
+            name={item.name}
+            date={item.date}
+            time={item.time}
+            isRace={item.isRace}
+          />
         ))}
       </motion.div>
     </AnimatePresence>
-    <div className="text-right text-white/40 text-[10px] mt-2 font-sans max-w-sm uppercase font-bold tracking-wider">*UK Time</div>
+    <div className="text-right text-white/40 text-[10px] mt-2 font-sans max-w-sm uppercase font-bold tracking-wider">
+      *UK Time
+    </div>
   </div>
 );
 
 const TopWinners = ({ track }: { track: TrackData }) => {
   return (
     <div className="mt-2 pt-2 md:mt-6 md:pt-6 border-t border-white/10">
-      <span className="text-white/60 font-montserrat font-medium text-[10px] md:text-[12px] uppercase tracking-[0.1em] mb-2 md:mb-3 block">Top Winners</span>
+      <span className="text-white/60 font-montserrat font-medium text-[10px] md:text-[12px] uppercase tracking-[0.1em] mb-2 md:mb-3 block">
+        Top Winners
+      </span>
       <AnimatePresence mode="wait">
-        <motion.div 
+        <motion.div
           key={track.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -184,9 +235,15 @@ const TopWinners = ({ track }: { track: TrackData }) => {
         >
           {track.winners.map((winner, idx) => (
             <div key={idx} className="flex flex-col">
-              <span className="text-white font-montserrat font-bold text-[12px] md:text-[14px] leading-tight">{winner.name}</span>
-              <span className="text-[#ff2800] font-montserrat font-bold text-[16px] md:text-[24px] my-0.5 md:my-1">{winner.wins} Wins</span>
-              <span className="text-white/50 font-sans text-[9px] md:text-[10px] leading-snug truncate">{winner.desc}</span>
+              <span className="text-white font-montserrat font-bold text-[12px] md:text-[14px] leading-tight">
+                {winner.name}
+              </span>
+              <span className="text-[#ff2800] font-montserrat font-bold text-[16px] md:text-[24px] my-0.5 md:my-1">
+                {winner.wins} Wins
+              </span>
+              <span className="text-white/50 font-sans text-[9px] md:text-[10px] leading-snug truncate">
+                {winner.desc}
+              </span>
             </div>
           ))}
         </motion.div>
@@ -209,11 +266,19 @@ const TopGrid = ({ track }: { track: TrackData }) => {
   );
 };
 
-useGLTF.preload(tracksGlbUrl);
+useGLTF.preload("/tracks.glb");
 
-const Track3D = ({ shape, position, glbNodeName }: { shape: number[][], position: [number, number, number], glbNodeName?: string }) => {
+const Track3D = ({
+  shape,
+  position,
+  glbNodeName,
+}: {
+  shape: number[][];
+  position: [number, number, number];
+  glbNodeName?: string;
+}) => {
   const trackRef = useRef<THREE.Group>(null);
-  const { scene } = useGLTF(tracksGlbUrl);
+  const { scene } = useGLTF("/tracks.glb");
 
   const { core, glow1, glow2, isGLB } = useMemo(() => {
     if (glbNodeName) {
@@ -226,36 +291,59 @@ const Track3D = ({ shape, position, glbNodeName }: { shape: number[][], position
         const box = new THREE.Box3().setFromObject(coreModel);
         const center = box.getCenter(new THREE.Vector3());
 
-        const setup = (model: THREE.Object3D, isGlow: boolean, opacity: number) => {
+        const setup = (
+          model: THREE.Object3D,
+          isGlow: boolean,
+          opacity: number,
+        ) => {
           model.position.set(-center.x, -center.y, -center.z);
-          
-          const meshesToReplace: { parent: THREE.Object3D, oldMesh: THREE.Mesh, newLines: THREE.LineSegments }[] = [];
+
+          const meshesToReplace: {
+            parent: THREE.Object3D;
+            oldMesh: THREE.Mesh;
+            newLines: THREE.LineSegments;
+          }[] = [];
 
           model.traverse((child) => {
             if (child instanceof THREE.Mesh) {
               const edges = new THREE.EdgesGeometry(child.geometry, 15);
               const material = new THREE.LineBasicMaterial({
-                color: isGlow ? new THREE.Color("#ff2800").multiplyScalar(4) : new THREE.Color("#ffffff"),
+                color: isGlow
+                  ? new THREE.Color("#ff2800").multiplyScalar(4)
+                  : new THREE.Color("#ffffff"),
                 transparent: isGlow,
                 opacity: opacity,
-                blending: isGlow ? THREE.AdditiveBlending : THREE.NormalBlending,
-                depthWrite: !isGlow
+                blending: isGlow
+                  ? THREE.AdditiveBlending
+                  : THREE.NormalBlending,
+                depthWrite: !isGlow,
               });
               const line = new THREE.LineSegments(edges, material);
               line.position.copy(child.position);
               line.rotation.copy(child.rotation);
               line.scale.copy(child.scale);
-              
+
               if (child.parent) {
-                meshesToReplace.push({ parent: child.parent, oldMesh: child, newLines: line });
+                meshesToReplace.push({
+                  parent: child.parent,
+                  oldMesh: child,
+                  newLines: line,
+                });
               }
-            } else if (child instanceof THREE.Line || child instanceof THREE.LineSegments) {
+            } else if (
+              child instanceof THREE.Line ||
+              child instanceof THREE.LineSegments
+            ) {
               child.material = new THREE.LineBasicMaterial({
-                color: isGlow ? new THREE.Color("#ff2800").multiplyScalar(4) : new THREE.Color("#ffffff"),
+                color: isGlow
+                  ? new THREE.Color("#ff2800").multiplyScalar(4)
+                  : new THREE.Color("#ffffff"),
                 transparent: isGlow,
                 opacity: opacity,
-                blending: isGlow ? THREE.AdditiveBlending : THREE.NormalBlending,
-                depthWrite: !isGlow
+                blending: isGlow
+                  ? THREE.AdditiveBlending
+                  : THREE.NormalBlending,
+                depthWrite: !isGlow,
               });
             }
           });
@@ -272,23 +360,25 @@ const Track3D = ({ shape, position, glbNodeName }: { shape: number[][], position
           core: setup(coreModel, false, 1),
           glow1: setup(glow1Model, true, 0.3),
           glow2: setup(glow2Model, true, 0.1),
-          isGLB: true
+          isGLB: true,
         };
       }
     }
 
-    const points = shape.map(p => new THREE.Vector3(p[0], p[1], p[2]));
+    const points = shape.map((p) => new THREE.Vector3(p[0], p[1], p[2]));
     const curve = new THREE.CatmullRomCurve3(points, true);
     const geometry = new THREE.TubeGeometry(curve, 150, 0.1, 8, true);
-    
+
     const createMesh = (isGlow: boolean, opacity: number, scale: number) => {
       const material = new THREE.MeshBasicMaterial({
-        color: isGlow ? new THREE.Color("#ff2800").multiplyScalar(4) : new THREE.Color("#ffffff"),
+        color: isGlow
+          ? new THREE.Color("#ff2800").multiplyScalar(4)
+          : new THREE.Color("#ffffff"),
         transparent: isGlow,
         opacity: opacity,
         blending: isGlow ? THREE.AdditiveBlending : THREE.NormalBlending,
         depthWrite: !isGlow,
-        wireframe: true
+        wireframe: true,
       });
       const mesh = new THREE.Mesh(geometry, material);
       mesh.scale.set(scale, scale, scale);
@@ -299,7 +389,7 @@ const Track3D = ({ shape, position, glbNodeName }: { shape: number[][], position
       core: createMesh(false, 1, 1),
       glow1: createMesh(true, 0.3, 1.05),
       glow2: createMesh(true, 0.1, 1.15),
-      isGLB: false
+      isGLB: false,
     };
   }, [shape, scene, glbNodeName]);
 
@@ -338,17 +428,18 @@ const TrackGroup = ({ scrollProgress }: { scrollProgress: number }) => {
       // progress goes from 0 to 1. Total width is (tracks.length - 1) * trackSpacing
       const targetX = -scrollProgress * (tracks.length - 1) * trackSpacing;
       // Smooth interpolation
-      groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.1;
+      groupRef.current.position.x +=
+        (targetX - groupRef.current.position.x) * 0.1;
     }
   });
 
   return (
     <group ref={groupRef}>
       {tracks.map((track, index) => (
-        <Track3D 
-          key={track.id} 
-          shape={track.shape} 
-          position={[index * trackSpacing, 0, 0]} 
+        <Track3D
+          key={track.id}
+          shape={track.shape}
+          position={[index * trackSpacing, 0, 0]}
           glbNodeName={track.glbNodeName}
         />
       ))}
@@ -368,7 +459,13 @@ const TrackMap = ({ scrollProgress }: { scrollProgress: number }) => {
   );
 };
 
-const MainContent = ({ track, scrollProgress }: { track: TrackData, scrollProgress: number }) => {
+const MainContent = ({
+  track,
+  scrollProgress,
+}: {
+  track: TrackData;
+  scrollProgress: number;
+}) => {
   return (
     <div className="flex-1 bg-[#111212] p-6 md:p-10 relative overflow-hidden flex flex-col z-10">
       <TopGrid track={track} />
@@ -387,14 +484,14 @@ export default function App() {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
+      orientation: "vertical",
+      gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 2,
     });
 
-    lenis.on('scroll', ScrollTrigger.update);
+    lenis.on("scroll", ScrollTrigger.update);
 
     const raf = (time: number) => {
       lenis.raf(time * 1000);
@@ -422,17 +519,17 @@ export default function App() {
           duration: { min: 0.1, max: 0.3 },
           delay: 0.05,
           ease: "power1.inOut",
-          directional: true
+          directional: true,
         },
         onUpdate: (self) => {
           setScrollProgress(self.progress);
           // Calculate which track should be active based on progress
           const index = Math.min(
             tracks.length - 1,
-            Math.max(0, Math.round(self.progress * (tracks.length - 1)))
+            Math.max(0, Math.round(self.progress * (tracks.length - 1))),
           );
-          setCurrentTrackIndex(prev => prev !== index ? index : prev);
-        }
+          setCurrentTrackIndex((prev) => (prev !== index ? index : prev));
+        },
       });
     }, containerRef);
 
@@ -440,10 +537,16 @@ export default function App() {
   }, []);
 
   return (
-    <div ref={containerRef} className="h-screen w-full bg-[#111212] flex items-center justify-center font-sans">
+    <div
+      ref={containerRef}
+      className="h-screen w-full bg-[#111212] flex items-center justify-center font-sans"
+    >
       <div className="flex flex-col md:flex-row w-full h-screen min-h-[600px] mx-auto">
         <Sidebar track={tracks[currentTrackIndex]} />
-        <MainContent track={tracks[currentTrackIndex]} scrollProgress={scrollProgress} />
+        <MainContent
+          track={tracks[currentTrackIndex]}
+          scrollProgress={scrollProgress}
+        />
       </div>
     </div>
   );
