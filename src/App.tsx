@@ -475,10 +475,48 @@ const MainContent = ({
   );
 };
 
+const InteractionHint = ({ hasInteracted }: { hasInteracted: boolean }) => {
+  return (
+    <AnimatePresence>
+      {!hasInteracted && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0, transition: { delay: 1 } }}
+          exit={{ opacity: 0, y: 20, transition: { duration: 0.5 } }}
+          className="absolute bottom-8 lg:bottom-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col items-center gap-3 backdrop-blur-md bg-black/30 px-8 py-4 rounded-3xl border border-[#ff2800]/20 min-w-[200px]"
+        >
+          <div className="relative w-8 h-8 flex items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              className="flex flex-col items-center absolute"
+            >
+              <div className="w-5 h-8 border-2 border-white/80 rounded-full flex justify-center pt-1.5">
+                <motion.div
+                  animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }}
+                  transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                  className="w-1 h-2 bg-[#ff2800] rounded-full"
+                />
+              </div>
+            </motion.div>
+          </div>
+          <div className="h-5 relative w-full flex justify-center mt-1">
+            <span className="text-white/80 font-montserrat font-bold text-[10px] md:text-[12px] uppercase tracking-[0.2em] whitespace-nowrap absolute">
+              Scroll to explore
+            </span>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -523,6 +561,7 @@ export default function App() {
         },
         onUpdate: (self) => {
           setScrollProgress(self.progress);
+          if (self.progress > 0.005) setHasInteracted(true);
           // Calculate which track should be active based on progress
           const index = Math.min(
             tracks.length - 1,
@@ -539,9 +578,10 @@ export default function App() {
   return (
     <div
       ref={containerRef}
-      className="h-screen w-full bg-[#111212] flex items-center justify-center font-sans"
+      className="h-[100dvh] w-full bg-[#111212] flex items-center justify-center font-sans"
     >
-      <div className="flex flex-col md:flex-row w-full h-screen min-h-[600px] mx-auto">
+      <InteractionHint hasInteracted={hasInteracted} />
+      <div className="flex flex-col md:flex-row w-full h-[100dvh] min-h-[600px] mx-auto">
         <Sidebar track={tracks[currentTrackIndex]} />
         <MainContent
           track={tracks[currentTrackIndex]}
